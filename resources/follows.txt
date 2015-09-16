@@ -1,0 +1,24 @@
+# person	follower	statuses
+A	B	10
+A	D	5
+A	E	8
+B	A	12
+B	D	7
+C	D	8
+C	F	1
+D	A	6
+D	B	6
+D	C	3
+D	E	9
+E	A	6
+E	D	5
+E	F	15
+F	C	22
+F	E	16
+F	H	4
+J	F	10
+J	I	12
+H	F	5
+H	I	4
+I	J	9
+I	H	53

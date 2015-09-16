@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane minHeight="430.0" minWidth="750.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zhangqun.apps.weibo.view.MainLayoutController">
+  <tabs>
+    <Tab text="%app.main.settings">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background">
+               <children>
+                  <SplitPane dividerPositions="0.4" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                        <VBox fx:id="basicLeftPane" minWidth="-Infinity" spacing="5.0" SplitPane.resizableWithParent="false">
+                           <children>
+                              <TitledPane animated="false" text="%app.main.settings.input.group_basic_input">
+                                <content>
+                                    <GridPane alignment="CENTER" hgap="10.0" prefHeight="167.0" prefWidth="213.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <TextField fx:id="followsDataField" editable="false" text="/Users/liudonghua/Documents/workspace/weibo/resources/follows.txt" />
+                                          <TextField fx:id="weibosDataField" editable="false" text="/Users/liudonghua/Documents/workspace/weibo/resources/weibo.txt" GridPane.rowIndex="1" />
+                                          <Button fx:id="selectFollowsButton" mnemonicParsing="false" onAction="#handleSelectFollowsFile" text="%app.main.settings.input.select_follows_file" GridPane.columnIndex="1" />
+                                          <Button fx:id="selectWeibosButton" mnemonicParsing="false" onAction="#handleSelectWeibosFile" text="%app.main.settings.input.select_weibos_file" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <HBox alignment="CENTER_LEFT" spacing="3.0" GridPane.rowIndex="2">
+                                             <children>
+                                                <Label text="%app.main.settings.input.set_q_value" GridPane.rowIndex="3" />
+                                                <Label fx:id="qLabel" prefWidth="30.0" text="0.85" GridPane.rowIndex="3" />
+                                             </children>
+                                          </HBox>
+                                          <Slider fx:id="qValueSlider" blockIncrement="0.1" max="1.0" prefHeight="14.0" prefWidth="92.0" value="0.85" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label text="%app.main.settings.input.set_k_value" GridPane.rowIndex="3" />
+                                          <ComboBox fx:id="kValueCombo" onAction="#handleChooseKValue" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                       </children>
+                                    </GridPane>
+                                </content>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TitledPane>
+                              <TitledPane animated="false" text="%app.main.settings.input.group_action">
+                                <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="2.0" spacing="10.0">
+                                             <children>
+                                                <Button fx:id="drawRawGraphButton" disable="true" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleDrawRawGraph" text="%app.main.settings.input.draw_raw_graph" />
+                                                <Button fx:id="drawDirectedGraphButton" disable="true" layoutX="76.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleDrawDirectedGraph" text="%app.main.settings.input.draw_directed_graph" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                             <children>
+                                                <Button fx:id="drawUndirectedGraphButton" disable="true" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleDrawUndirectedGraph" text="%app.main.settings.input.draw_undirected_graph" />
+                                                <Button fx:id="discoverKeyUserButton" disable="true" layoutX="76.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleDiscoverKeyUser" text="%app.main.settings.input.discover_key_user" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                </content>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TitledPane>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                      <AnchorPane>
+                           <children>
+                              <StackPane fx:id="orginalGraphStackPane" layoutX="14.0" layoutY="14.0" prefHeight="389.0" prefWidth="356.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets></AnchorPane>
+                    </items>
+                     <effect>
+                        <Reflection />
+                     </effect>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
