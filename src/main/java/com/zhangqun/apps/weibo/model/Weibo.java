@@ -17,7 +17,7 @@ public class Weibo {
 	private String person;
 
 	private int statuses;
-	
+
 	public Weibo(String person, int statuses) {
 		this.person = person;
 		this.statuses = statuses;
@@ -49,7 +49,8 @@ public class Weibo {
 
 	@Override
 	public String toString() {
-		return "Follow [id=" + id + ", person=" + person+ ", statuses=" + statuses + "]";
+		return "Follow [id=" + id + ", person=" + person + ", statuses="
+				+ statuses + "]";
 	}
 
 }

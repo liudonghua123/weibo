@@ -11,6 +11,6 @@ public interface WeiboRepository extends CrudRepository<Weibo, Long> {
 
 	public Weibo findByPerson(String person);
 
-	@Query(value="select sum(statuses) from weibo", nativeQuery=true)
+	@Query(value = "select sum(statuses) from weibo", nativeQuery = true)
 	public int calculateStatusSum();
 }

@@ -44,21 +44,22 @@ import com.zhangqun.apps.weibo.view.FollowEntry;
 import com.zhangqun.apps.weibo.view.UndirectedPair;
 
 public class Utils {
-	
+
 	public static String DEFAULT_DELIMITER = ",";
-	
+
 	public static double formatNumber(double doubleValue) {
-		return new BigDecimal(doubleValue).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return new BigDecimal(doubleValue)
+				.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	public static void enableControl(boolean enable, Control... controls) {
-		for(Control control : controls) {
+		for (Control control : controls) {
 			control.setDisable(!enable);
 		}
 	}
-	
-	public static void drawDirectedGraph(Pane pane,
-			List<String> nodes,  Map<FollowEntry, Double> followsEdgeCache, boolean isIntegerEdge) {
+
+	public static void drawDirectedGraph(Pane pane, List<String> nodes,
+			Map<FollowEntry, Double> followsEdgeCache, boolean isIntegerEdge) {
 		Graph graph = new MultiGraph("id");
 
 		System.setProperty("org.graphstream.ui.renderer",
@@ -70,42 +71,43 @@ public class Utils {
 			e.printStackTrace();
 		}
 
-        graph.addAttribute("ui.stylesheet", styleSheet);
+		graph.addAttribute("ui.stylesheet", styleSheet);
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
 
-        // 添加节点
-        for(String node : nodes) {
-        	graph.addNode(node);
-        }
-        // 添加边
-        for(Entry<FollowEntry, Double> entry : followsEdgeCache.entrySet()) {
-        	FollowEntry followEntry = entry.getKey();
-        	double edgeValue = entry.getValue();
-        	graph.addEdge(
-        			isIntegerEdge ? 
-        			String.format("interactives: %s<-%s: %d", followEntry.getPerson(), followEntry.getFollower(), (int)edgeValue): 
-        			String.format("W%s<-%s: %.2f", followEntry.getPerson(), followEntry.getFollower(), edgeValue) , 
-        			followEntry.getFollower(), 
-        			followEntry.getPerson(),
-        			true);
-        }
-        // 遍历节点，添加相应属性
-        Collection<Node> nodeSet = graph.getNodeSet();
-        for (Node node : nodeSet) {
-            node.addAttribute("ui.label", node.getId());
-        }
-        Collection<Edge> edgeSet = graph.getEdgeSet();
-        for (Edge edge : edgeSet) {
-        	edge.addAttribute("ui.label", edge.getId());
-        }
+		// 添加节点
+		for (String node : nodes) {
+			graph.addNode(node);
+		}
+		// 添加边
+		for (Entry<FollowEntry, Double> entry : followsEdgeCache.entrySet()) {
+			FollowEntry followEntry = entry.getKey();
+			double edgeValue = entry.getValue();
+			graph.addEdge(
+					isIntegerEdge ? String.format("interactives: %s<-%s: %d",
+							followEntry.getPerson(), followEntry.getFollower(),
+							(int) edgeValue) : String.format("W%s<-%s: %.2f",
+							followEntry.getPerson(), followEntry.getFollower(),
+							edgeValue), followEntry.getFollower(), followEntry
+							.getPerson(), true);
+		}
+		// 遍历节点，添加相应属性
+		Collection<Node> nodeSet = graph.getNodeSet();
+		for (Node node : nodeSet) {
+			node.addAttribute("ui.label", node.getId());
+		}
+		Collection<Edge> edgeSet = graph.getEdgeSet();
+		for (Edge edge : edgeSet) {
+			edge.addAttribute("ui.label", edge.getId());
+		}
 
-		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		Viewer viewer = new Viewer(graph,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.enableAutoLayout();
 		View view = viewer.addDefaultView(false);
-		
+
 		SwingNode swingNode = new SwingNode();
-		swingNode.setContent((JComponent)view);
+		swingNode.setContent((JComponent) view);
 		pane.getChildren().remove(0, pane.getChildren().size());
 		pane.getChildren().add(swingNode);
 	}
@@ -124,38 +126,42 @@ public class Utils {
 			e.printStackTrace();
 		}
 
-        graph.addAttribute("ui.stylesheet", styleSheet);
+		graph.addAttribute("ui.stylesheet", styleSheet);
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
 
-        // 添加节点
-        for(Entry<String, Double> nodeWithWeight : nodeWeightCache.entrySet()) {
-        	graph.addNode(nodeWithWeight.getKey());
-        }
-        // 添加边
-        for(UndirectedPair entry : followsEdgeSet) {
-        	graph.addEdge(String.format("%s-%s", entry.getSource(), entry.getTarget()) , entry.getSource(), entry.getTarget());
-        }
-        // 遍历节点，添加相应属性
-        Collection<Node> nodeSet = graph.getNodeSet();
-        for (Node node : nodeSet) {
-            node.addAttribute("ui.label", String.format("%s: %.2f", node.getId(), nodeWeightCache.get(node.getId())));
-        }
-        Collection<Edge> edgeSet = graph.getEdgeSet();
-        for (Edge edge : edgeSet) {
-        	edge.addAttribute("ui.label", "");
-        }
+		// 添加节点
+		for (Entry<String, Double> nodeWithWeight : nodeWeightCache.entrySet()) {
+			graph.addNode(nodeWithWeight.getKey());
+		}
+		// 添加边
+		for (UndirectedPair entry : followsEdgeSet) {
+			graph.addEdge(String.format("%s-%s", entry.getSource(),
+					entry.getTarget()), entry.getSource(), entry.getTarget());
+		}
+		// 遍历节点，添加相应属性
+		Collection<Node> nodeSet = graph.getNodeSet();
+		for (Node node : nodeSet) {
+			node.addAttribute(
+					"ui.label",
+					String.format("%s: %.2f", node.getId(),
+							nodeWeightCache.get(node.getId())));
+		}
+		Collection<Edge> edgeSet = graph.getEdgeSet();
+		for (Edge edge : edgeSet) {
+			edge.addAttribute("ui.label", "");
+		}
 
-		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		Viewer viewer = new Viewer(graph,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.enableAutoLayout();
 		View view = viewer.addDefaultView(false);
-		
+
 		SwingNode swingNode = new SwingNode();
-		swingNode.setContent((JComponent)view);
+		swingNode.setContent((JComponent) view);
 		pane.getChildren().remove(0, pane.getChildren().size());
 		pane.getChildren().add(swingNode);
 	}
-	
 
 	private static String readClassPathFile(String fileClassPath)
 			throws IOException {
@@ -176,10 +182,9 @@ public class Utils {
 	}
 
 	public static boolean isEmptyCollection(String[] splitStr) {
-		if(splitStr == null || splitStr.length == 0) {
+		if (splitStr == null || splitStr.length == 0) {
 			return true;
-		}
-		else if(splitStr.length == 1 && splitStr[0].equals("")) {
+		} else if (splitStr.length == 1 && splitStr[0].equals("")) {
 			return true;
 		}
 		return false;
@@ -189,45 +194,48 @@ public class Utils {
 		int[] result = new int[collections.size()];
 		Iterator<Integer> iterator = collections.iterator();
 		int i = 0;
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			result[i] = iterator.next();
-			i ++;
+			i++;
 		}
 		return result;
 	}
 
-	
 	// http://stackoverflow.com/questions/23057549/lambda-expression-to-convert-array-list-of-string-to-array-list-of-integers
-	//for lists
-	public static <T, U> List<U> convertList(List<T> from, Function<T, U> func){
-	    return from.stream().map(func).collect(Collectors.toList());
+	// for lists
+	public static <T, U> List<U> convertList(List<T> from, Function<T, U> func) {
+		return from.stream().map(func).collect(Collectors.toList());
 	}
 
-	//for arrays
-	public static <T, U> U[] convertArray(T[] from, Function<T, U> func, 
-	                                       IntFunction<U[]> generator){
-	    return Arrays.stream(from).map(func).toArray(generator);
+	// for arrays
+	public static <T, U> U[] convertArray(T[] from, Function<T, U> func,
+			IntFunction<U[]> generator) {
+		return Arrays.stream(from).map(func).toArray(generator);
 	}
 
-	static class CustomToolTipGenerator implements CategoryToolTipGenerator  {
-	    public String generateToolTip(CategoryDataset dataset, int row, int column)   {
-	           return row + ": " + column;
-	    }
+	static class CustomToolTipGenerator implements CategoryToolTipGenerator {
+		public String generateToolTip(CategoryDataset dataset, int row,
+				int column) {
+			return row + ": " + column;
+		}
 	}
-	
+
 	// http://stackoverflow.com/questions/6247144/how-to-load-a-folder-from-a-jar
-	 /**
-	   * List directory contents for a resource folder. Not recursive.
-	   * This is basically a brute-force implementation.
-	   * Works for regular files and also JARs.
-	   * 
-	   * @author Greg Briggs
-	   * @param clazz Any java class that lives in the same place as the resources you want.
-	   * @param path Should end with "/", but not start with one.
-	   * @return Just the name of each member item, not the full paths.
-	   * @throws URISyntaxException 
-	   * @throws IOException 
-	   */
+	/**
+	 * List directory contents for a resource folder. Not recursive. This is
+	 * basically a brute-force implementation. Works for regular files and also
+	 * JARs.
+	 * 
+	 * @author Greg Briggs
+	 * @param clazz
+	 *            Any java class that lives in the same place as the resources
+	 *            you want.
+	 * @param path
+	 *            Should end with "/", but not start with one.
+	 * @return Just the name of each member item, not the full paths.
+	 * @throws URISyntaxException
+	 * @throws IOException
+	 */
 	public static String[] getResourceListing(Class clazz, String path)
 			throws URISyntaxException, IOException {
 		URL dirURL = clazz.getClassLoader().getResource(path);
@@ -259,7 +267,8 @@ public class Utils {
 					String entry = name.substring(path.length());
 					int checkSubdir = entry.indexOf("/");
 					if (checkSubdir >= 0) {
-						// if it is a subdirectory, we just return the directory name
+						// if it is a subdirectory, we just return the directory
+						// name
 						entry = entry.substring(0, checkSubdir);
 					}
 					result.add(entry);
@@ -268,8 +277,8 @@ public class Utils {
 			return result.toArray(new String[result.size()]);
 		}
 
-		throw new UnsupportedOperationException("Cannot list files for URL " + dirURL);
+		throw new UnsupportedOperationException("Cannot list files for URL "
+				+ dirURL);
 	}
-
 
 }

@@ -13,12 +13,12 @@ public interface FollowRepository extends CrudRepository<Follow, Long> {
 
 	public Follow findByFollower(String follower);
 
-	@Query(value="select sum(interactives) from follow where follower = ?1", nativeQuery=true)
+	@Query(value = "select sum(interactives) from follow where follower = ?1", nativeQuery = true)
 	public int findTotalInteractivesByFollower(String follower);
 
-	@Query(value="select follower from follow where person = ?1", nativeQuery=true)
+	@Query(value = "select follower from follow where person = ?1", nativeQuery = true)
 	public List<String> findFollower(String person);
 
-	@Query(value="select person from follow where follower = ?1", nativeQuery=true)
+	@Query(value = "select person from follow where follower = ?1", nativeQuery = true)
 	public List<String> findFollowedPerson(String follower);
 }

@@ -17,9 +17,9 @@ public class Follow {
 	private String person;
 
 	private String follower;
-	
+
 	private int interactives;
-	
+
 	public Follow(String person, String follower, int interactives) {
 		super();
 		this.person = person;
@@ -50,7 +50,7 @@ public class Follow {
 	public void setFollower(String follower) {
 		this.follower = follower;
 	}
-	
+
 	public int getInteractives() {
 		return interactives;
 	}
@@ -61,7 +61,8 @@ public class Follow {
 
 	@Override
 	public String toString() {
-		return "Follow [id=" + id + ", person=" + person+ ", follower=" + follower+ ", interactives=" + interactives + "]";
+		return "Follow [id=" + id + ", person=" + person + ", follower="
+				+ follower + ", interactives=" + interactives + "]";
 	}
 
 }

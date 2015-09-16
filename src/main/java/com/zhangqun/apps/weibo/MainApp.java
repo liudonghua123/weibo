@@ -33,7 +33,7 @@ public class MainApp extends Application implements CommandLineRunner {
 
 	@Autowired
 	private FollowService followService;
-	
+
 	@Autowired
 	private WeiboService weiboService;
 	private static FollowService followService1;
@@ -43,115 +43,119 @@ public class MainApp extends Application implements CommandLineRunner {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
-	
+
 	private RootLayoutController rootController;
 	private MainLayoutController mainController;
-	
+
 	private Locale locale;
 	private ResourceBundle i18nBundle;
-
 
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Weibo Key User Discover Application");
-		
-		// http://fxexperience.com/2013/01/modena-new-theme-for-javafx-8/
-//		setUserAgentStylesheet(STYLESHEET_MODENA);
 
-        // Set the application icon.
-        this.primaryStage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("images/art-icon-32.png")));
-		
+		// http://fxexperience.com/2013/01/modena-new-theme-for-javafx-8/
+		// setUserAgentStylesheet(STYLESHEET_MODENA);
+
+		// Set the application icon.
+		this.primaryStage.getIcons().add(
+				new Image(this.getClass().getClassLoader()
+						.getResourceAsStream("images/art-icon-32.png")));
+
 		locale = getLocale();
-		i18nBundle = ResourceBundle.getBundle("com.zhangqun.apps.weibo.ApplicationResources", locale);
-        
+		i18nBundle = ResourceBundle.getBundle(
+				"com.zhangqun.apps.weibo.ApplicationResources", locale);
+
 		initRootLayout();
-		
+
 		initMainLayout();
-		  
-  		// inject followService and weiboService
-  		// MainLayoutController annotated with @Component does not work, why?
-  		mainController.setFollowService(followService1);
-  		mainController.setWeiboService(weiboService1);
-		
+
+		// inject followService and weiboService
+		// MainLayoutController annotated with @Component does not work, why?
+		mainController.setFollowService(followService1);
+		mainController.setWeiboService(weiboService1);
+
 		primaryStage.setOnCloseRequest(e -> {
-			//Platform.exit();
-			System.exit(0);
-		});
+			// Platform.exit();
+				System.exit(0);
+			});
 	}
 
 	private void initRootLayout() {
 		try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(i18nBundle);
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+			// Load root layout from fxml file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setResources(i18nBundle);
+			loader.setLocation(MainApp.class
+					.getResource("view/RootLayout.fxml"));
+			rootLayout = (BorderPane) loader.load();
 
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            primaryStage.setMinWidth(primaryStage.getWidth());
-            primaryStage.setMinHeight(primaryStage.getHeight());
-            
-            rootController = loader.getController();
-            rootController.setMainApp(this);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			// Show the scene containing the root layout.
+			Scene scene = new Scene(rootLayout);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			primaryStage.setMinWidth(primaryStage.getWidth());
+			primaryStage.setMinHeight(primaryStage.getHeight());
+
+			rootController = loader.getController();
+			rootController.setMainApp(this);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	private void initMainLayout() {
-        try {
-            // Load main layout
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(i18nBundle);
-            loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
-            TabPane mainLayout = (TabPane) loader.load();
+		try {
+			// Load main layout
+			FXMLLoader loader = new FXMLLoader();
+			loader.setResources(i18nBundle);
+			loader.setLocation(MainApp.class
+					.getResource("view/MainLayout.fxml"));
+			TabPane mainLayout = (TabPane) loader.load();
 
-            // Set main layout into the center of root layout.
-            rootLayout.setCenter(mainLayout);
-            
-            mainController = loader.getController();
-            mainController.setMainApp(this);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			// Set main layout into the center of root layout.
+			rootLayout.setCenter(mainLayout);
+
+			mainController = loader.getController();
+			mainController.setMainApp(this);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
-	
+
 	public void updateStatusBar(STATUS startParseGraph) {
 		rootController.updateStatusBar(startParseGraph);
 	}
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-    
-    public ResourceBundle getI18nResourceBundle() {
-    	return i18nBundle;
-    }
-	
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public ResourceBundle getI18nResourceBundle() {
+		return i18nBundle;
+	}
+
 	public Locale getLocale() {
 		Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-	    String lang = prefs.get("locale_lang", null);
-	    if(lang == null) {
-	    	return Locale.getDefault();
-	    }
-	    String country = prefs.get("locale_country", "");
-	    return new Locale(lang, country);
+		String lang = prefs.get("locale_lang", null);
+		if (lang == null) {
+			return Locale.getDefault();
+		}
+		String country = prefs.get("locale_country", "");
+		return new Locale(lang, country);
 	}
-	
+
 	public void setLocale(Locale locale) {
 		Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-	    prefs.put("locale_lang", locale.getLanguage());
-	    prefs.put("locale_country", locale.getCountry());
+		prefs.put("locale_lang", locale.getLanguage());
+		prefs.put("locale_country", locale.getCountry());
 	}
-	
+
 	public Locale getCurrentInUseLocale() {
 		return locale;
 	}

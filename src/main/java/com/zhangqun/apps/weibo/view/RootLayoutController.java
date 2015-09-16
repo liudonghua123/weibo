@@ -20,26 +20,25 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-
 public class RootLayoutController {
-	
+
 	@FXML
 	private RadioMenuItem languageEnUSRadioMenuItem;
 	@FXML
 	private RadioMenuItem languageZhCNRadioMenuItem;
-	
+
 	@FXML
 	private ProgressBar statusProgressBar;
 	@FXML
 	private Label statusLabel;
-	
+
 	private MainApp mainApp;
 	private ResourceBundle i18nBundle;
-	
+
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		i18nBundle = mainApp.getI18nResourceBundle();
-		
+
 		STATUS_LABEL_TEXTS = new String[] {
 				i18nBundle.getString("app.status.0_choose_graph"),
 				i18nBundle.getString("app.status.1_graph_data_format_error"),
@@ -47,100 +46,102 @@ public class RootLayoutController {
 				i18nBundle.getString("app.status.3_finish_parse_graph"),
 				i18nBundle.getString("app.status.4_start_execution"),
 				i18nBundle.getString("app.status.5_finish_execution"),
-				i18nBundle.getString("app.status.6_terminate_execution"),
-		};
-		
-		if(mainApp.getCurrentInUseLocale().equals(Locale.CHINA)) {
+				i18nBundle.getString("app.status.6_terminate_execution"), };
+
+		if (mainApp.getCurrentInUseLocale().equals(Locale.CHINA)) {
 			languageZhCNRadioMenuItem.setSelected(true);
-		}
-		else {
+		} else {
 			languageEnUSRadioMenuItem.setSelected(true);
 		}
 	}
-	
-    @FXML
-    private void initialize() {
-    	
-    }
-	
+
 	@FXML
-    private void handleMenuExit(ActionEvent event) {
+	private void initialize() {
+
+	}
+
+	@FXML
+	private void handleMenuExit(ActionEvent event) {
 		System.exit(0);
 	}
-	
+
 	@FXML
-    private void handleMenuInstructions(ActionEvent event) {
-		InstructionDialogController controller = new InstructionDialogController(mainApp.getPrimaryStage(), "");
+	private void handleMenuInstructions(ActionEvent event) {
+		InstructionDialogController controller = new InstructionDialogController(
+				mainApp.getPrimaryStage(), "");
 		controller.setMainApp(mainApp);
 		controller.show();
 	}
-	
+
 	@FXML
-    private void handleMenuLanguageEnUS(ActionEvent event) {
+	private void handleMenuLanguageEnUS(ActionEvent event) {
 		mainApp.setLocale(Locale.US);
-		if(!mainApp.getCurrentInUseLocale().equals(Locale.US)) {
+		if (!mainApp.getCurrentInUseLocale().equals(Locale.US)) {
 			showLanguageChangeDialog();
 		}
 	}
-	
+
 	@FXML
-    private void handleMenuLanguageZhCN(ActionEvent event) {
+	private void handleMenuLanguageZhCN(ActionEvent event) {
 		mainApp.setLocale(Locale.CHINA);
-		if(!mainApp.getCurrentInUseLocale().equals(Locale.CHINA)) {
+		if (!mainApp.getCurrentInUseLocale().equals(Locale.CHINA)) {
 			showLanguageChangeDialog();
 		}
 	}
-	
+
 	private void showLanguageChangeDialog() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(i18nBundle.getString("app.dialog.language_change.title"));
 		alert.setHeaderText("");
-		alert.setContentText(i18nBundle.getString("app.dialog.language_change.content"));
+		alert.setContentText(i18nBundle
+				.getString("app.dialog.language_change.content"));
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("images/art-icon-32.png")));
+		stage.getIcons().add(
+				new Image(this.getClass().getClassLoader()
+						.getResourceAsStream("images/art-icon-32.png")));
 		alert.showAndWait();
 	}
-	
+
 	@FXML
-    private void handleMenuAbout(ActionEvent event) {
-//		// 显示关于我们对话框
-//		Alert alert = new Alert(AlertType.INFORMATION);
-//		alert.setTitle(i18nBundle.getString("app.dialog.about.title"));
-//		alert.setHeaderText(i18nBundle.getString("app.dialog.about.title"));
-//		alert.setGraphic(new ImageView(this.getClass().getResource("/images/ynu_crest.jpg").toString()));
-//		alert.setContentText(i18nBundle.getString("app.dialog.about.content"));
-//		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-//		stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("images/art-icon-32.png")));
-//		alert.showAndWait();
-		
+	private void handleMenuAbout(ActionEvent event) {
+		// // 显示关于我们对话框
+		// Alert alert = new Alert(AlertType.INFORMATION);
+		// alert.setTitle(i18nBundle.getString("app.dialog.about.title"));
+		// alert.setHeaderText(i18nBundle.getString("app.dialog.about.title"));
+		// alert.setGraphic(new
+		// ImageView(this.getClass().getResource("/images/ynu_crest.jpg").toString()));
+		// alert.setContentText(i18nBundle.getString("app.dialog.about.content"));
+		// Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		// stage.getIcons().add(new
+		// Image(this.getClass().getClassLoader().getResourceAsStream("images/art-icon-32.png")));
+		// alert.showAndWait();
+
 		Dialog dialog = new Dialog();
 		dialog.setTitle(i18nBundle.getString("app.dialog.about.title"));
 		dialog.setHeaderText("");
-		dialog.setGraphic(new ImageView(this.getClass().getResource("/images/ynu_crest.jpg").toString()));
+		dialog.setGraphic(new ImageView(this.getClass()
+				.getResource("/images/ynu_crest.jpg").toString()));
 		StackPane pane = new StackPane();
-		Label content = new Label(i18nBundle.getString("app.dialog.about.content"));
+		Label content = new Label(
+				i18nBundle.getString("app.dialog.about.content"));
 		pane.getChildren().add(content);
 		dialog.getDialogPane().setContent(pane);
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image(this.getClass().getClassLoader().getResourceAsStream("images/art-icon-32.png")));
+		stage.getIcons().add(
+				new Image(this.getClass().getClassLoader()
+						.getResourceAsStream("images/art-icon-32.png")));
 		dialog.showAndWait();
 	}
-	
 
 	public enum STATUS {
-		NOT_INPUT_GRAPH_DATA,
-		GRAPH_DATA_FORMAT_ERROR,
-		START_PARSE_GRAPH,
-		FINISH_PARSE_GRAPH,
-		START_ALGORITHM_GENERAL,
-		FINISH_ALGORITHM_GENERAL,
-		TERMINATE_ALGORITHM_GENERAL
+		NOT_INPUT_GRAPH_DATA, GRAPH_DATA_FORMAT_ERROR, START_PARSE_GRAPH, FINISH_PARSE_GRAPH, START_ALGORITHM_GENERAL, FINISH_ALGORITHM_GENERAL, TERMINATE_ALGORITHM_GENERAL
 	}
-	
+
 	private String[] STATUS_LABEL_TEXTS;
-	
-	private double[] PROGRESS_VALUES = new double[] {0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 0f};
+
+	private double[] PROGRESS_VALUES = new double[] { 0f, 1.0f, -1.0f, 1.0f,
+			-1.0f, 1.0f, 0f };
 
 	public void updateStatusBar(STATUS status) {
 		int index = status.ordinal();

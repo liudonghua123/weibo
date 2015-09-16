@@ -3,7 +3,7 @@ package com.zhangqun.apps.weibo.view;
 public class UndirectedPair {
 	private String source;
 	private String target;
-	
+
 	public UndirectedPair(String source, String target) {
 		this.source = source.compareTo(target) > 0 ? source : target;
 		this.target = source.compareTo(target) > 0 ? target : source;
@@ -55,7 +55,5 @@ public class UndirectedPair {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 }

@@ -20,3 +20,6 @@ logs/
 
 # Database file
 weibo.db
+
+# Mac OSX metadata file
+.DS_Store

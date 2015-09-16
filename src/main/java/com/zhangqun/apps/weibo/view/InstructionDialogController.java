@@ -21,27 +21,27 @@ import javafx.util.Callback;
 import com.zhangqun.apps.weibo.MainApp;
 import com.zhangqun.apps.weibo.Utils;
 
-
 public class InstructionDialogController extends Stage implements Initializable {
-	
+
 	@FXML
 	private Pagination pagination;
-	
+
 	private MainApp mainApp;
 	private ResourceBundle i18nBundle;
-	
+
 	private String instructionDirPath = "images/instructions/";
-	
+
 	private String[] instructionImagePaths = null;
-	
-	
-	
+
 	public InstructionDialogController(Stage ownerStage, String title) {
 		setTitle(title);
-		getIcons().add(new Image(getClass().getClassLoader().getResource("images/art-icon-32.png").toString()));
+		getIcons().add(
+				new Image(getClass().getClassLoader()
+						.getResource("images/art-icon-32.png").toString()));
 		initModality(Modality.WINDOW_MODAL);
 		initOwner(ownerStage);
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InstructionDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+				"InstructionDialog.fxml"));
 		fxmlLoader.setController(this);
 		try {
 			setScene(new Scene((Parent) fxmlLoader.load()));
@@ -52,16 +52,17 @@ public class InstructionDialogController extends Stage implements Initializable 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-    	pagination.setFocusTraversable(false);
-    	try {
-			instructionImagePaths = Utils.getResourceListing(this.getClass(), instructionDirPath);
+		pagination.setFocusTraversable(false);
+		try {
+			instructionImagePaths = Utils.getResourceListing(this.getClass(),
+					instructionDirPath);
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
 		if (instructionImagePaths != null && instructionImagePaths.length > 0) {
-//			pagination = new Pagination(instructionImagePaths.length, 0);
+			// pagination = new Pagination(instructionImagePaths.length, 0);
 			pagination.setPageCount(instructionImagePaths.length);
-	        pagination.getStyleClass().add(Pagination.STYLE_CLASS_BULLET);
+			pagination.getStyleClass().add(Pagination.STYLE_CLASS_BULLET);
 			pagination.setPageFactory(new Callback<Integer, Node>() {
 
 				@Override
@@ -71,22 +72,23 @@ public class InstructionDialogController extends Stage implements Initializable 
 			});
 		}
 
-    }
-    
+	}
 
-	public Node createPage(int pageIndex) {        
-        ImageView imageView = null;
-        URL resource = this.getClass().getClassLoader().getResource(instructionDirPath + instructionImagePaths[pageIndex]);
-        imageView = new ImageView(resource.toString());
-        return imageView;
-    }
+	public Node createPage(int pageIndex) {
+		ImageView imageView = null;
+		URL resource = this
+				.getClass()
+				.getClassLoader()
+				.getResource(
+						instructionDirPath + instructionImagePaths[pageIndex]);
+		imageView = new ImageView(resource.toString());
+		return imageView;
+	}
 
-	
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		i18nBundle = mainApp.getI18nResourceBundle();
-		
+
 	}
-	
 
 }
