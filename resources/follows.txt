@@ -1,4 +1,4 @@
-# person	follower	statuses
+# person	follower	interactives
 A	B	10
 A	D	5
 A	E	8
