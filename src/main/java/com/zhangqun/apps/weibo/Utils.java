@@ -112,7 +112,7 @@ public class Utils {
 		pane.getChildren().add(swingNode);
 	}
 
-	public static void drawDirectedGraph(StackPane pane,
+	public static void drawUndirectedGraph(StackPane pane,
 			Map<String, Double> nodeWeightCache,
 			Set<UndirectedPair> followsEdgeSet) {
 		Graph graph = new MultiGraph("id");

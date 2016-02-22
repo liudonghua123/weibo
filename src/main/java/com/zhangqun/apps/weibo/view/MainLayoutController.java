@@ -8,8 +8,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,36 +15,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.BiconnectivityInspector;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import com.google.common.base.Joiner;
 import com.zhangqun.apps.weibo.MainApp;
 import com.zhangqun.apps.weibo.Utils;
 import com.zhangqun.apps.weibo.model.Follow;
@@ -54,6 +31,19 @@ import com.zhangqun.apps.weibo.model.Weibo;
 import com.zhangqun.apps.weibo.service.FollowService;
 import com.zhangqun.apps.weibo.service.WeiboService;
 import com.zhangqun.apps.weibo.view.RootLayoutController.STATUS;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 //@Component
 public class MainLayoutController {
@@ -354,10 +344,84 @@ public class MainLayoutController {
 					}
 					Set<UndirectedPair> followsEdgeSet = filterMultiEdge(followsEdgeCache);
 					Platform.runLater(() -> {
-						Utils.drawDirectedGraph(orginalGraphStackPane,
+						Utils.drawUndirectedGraph(orginalGraphStackPane,
 								nodeWeightCache, followsEdgeSet);
 					});
 				}).start();
+	}
+
+	@FXML
+	void handleDiscoverKeyUser(ActionEvent event) {
+		new Thread(() -> {
+			// prepare initial nodes and edges
+			preprocessIfNeeded();
+			Set<String> nodeSet = new HashSet<>(nodes);
+			Set<UndirectedPair> edgeSet = filterMultiEdge(followsEdgeCache);
+			Map<String, Double> nodeWeightMap = rebuildNodeWeight(nodeSet);
+			// key nodes collection
+			List<String> keyNodes = new ArrayList<>();
+			// discover k key nodes
+			for(int i = 0; i < kValue; i++) {
+				// build undirected graph
+				UndirectedGraph<String, DefaultEdge> graph = buildUndirectedGraph(nodeSet, edgeSet);
+				// find key node
+				BiconnectivityInspector<String, DefaultEdge> graphForInspector = new BiconnectivityInspector<>(graph);
+				Set<String> cutpoints = graphForInspector.getCutpoints();
+				logger.info(String.format("find current cutpoints: %s !", cutpoints));
+				String keyNode = findKeyNode(cutpoints, nodeWeightMap);
+				logger.info(String.format("find key node: %s !", keyNode));
+				keyNodes.add(keyNode);
+				// delete current found key node
+				nodeSet.remove(keyNode);
+				edgeSet = removeReleventEdge(edgeSet, keyNode);
+				nodeWeightMap = rebuildNodeWeight(nodeSet);
+			}
+		}).start();
+	}
+
+	private Map<String, Double> rebuildNodeWeight(Set<String> nodeSet) {
+		Map<String, Double> nodeWeightMap = new HashMap<>();
+		for (String node : nodeSet) {
+			double wai = calculateWeight(node);
+			nodeWeightMap.put(node, wai);
+		}
+		return nodeWeightMap;
+	}
+
+	private Set<UndirectedPair> removeReleventEdge(Set<UndirectedPair> edgeSet, String node) {
+		Set<UndirectedPair> filtedEdgeSet = new HashSet<>();
+		for(UndirectedPair edge : edgeSet) {
+			if(!edge.getSource().equals(node) && !edge.getTarget().equals(node)) {
+				filtedEdgeSet.add(edge);
+			}
+		}
+		return filtedEdgeSet;
+	}
+
+	private String findKeyNode(Set<String> cutpoints, Map<String, Double> nodeWeightMap) {
+		String keyNode = null;
+		double currentMaxWeight = Double.MIN_VALUE;
+		for(String node : cutpoints) {
+			double nodeWeight = nodeWeightMap.get(node);
+			if(nodeWeight > currentMaxWeight) {
+				currentMaxWeight = nodeWeight;
+				keyNode = node;
+			}
+		}
+		return keyNode;
+	}
+
+	private UndirectedGraph<String, DefaultEdge> buildUndirectedGraph(Set<String> nodeSet,
+			Set<UndirectedPair> edgeSet) {
+		UndirectedGraph<String, DefaultEdge> graph =
+	            new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
+		for(String node : nodeSet) {
+			graph.addVertex(node);
+		}
+		for(UndirectedPair edge : edgeSet) {
+			graph.addEdge(edge.getSource(), edge.getTarget());
+		}
+		return graph;
 	}
 
 	private Set<UndirectedPair> filterMultiEdge(
@@ -381,7 +445,7 @@ public class MainLayoutController {
 			lastPersonWeight = personWeight;
 			personWeight = qValue + (1 - qValue) * personWeightPercentageSum
 					* lastPersonWeight;
-			logger.info(String
+			logger.debug(String
 					.format("calculation person %s weight, lastPersonWeight = %f, personWeight = %f",
 							person, lastPersonWeight, personWeight));
 		} while (personWeight > lastPersonWeight);
@@ -412,11 +476,6 @@ public class MainLayoutController {
 		} else {
 			return personWeightPercentageCache.get(person);
 		}
-	}
-
-	@FXML
-	void handleDiscoverKeyUser(ActionEvent event) {
-
 	}
 
 	private void updateActionButtons() {
