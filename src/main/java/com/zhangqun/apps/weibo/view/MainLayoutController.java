@@ -376,6 +376,17 @@ public class MainLayoutController {
 				edgeSet = removeReleventEdge(edgeSet, keyNode);
 				nodeWeightMap = rebuildNodeWeight(nodeSet);
 			}
+			// draw the final highlighted key user graph based on the undirected graph
+			for (String node : nodes) {
+				double wai = calculateWeight(node);
+				nodeWeightCache.put(node, wai);
+			}
+			Set<UndirectedPair> followsEdgeSet = filterMultiEdge(followsEdgeCache);
+			Platform.runLater(() -> {
+				Utils.drawUndirectedGraph(orginalGraphStackPane,
+						nodeWeightCache, followsEdgeSet, keyNodes);
+			});
+			
 		}).start();
 	}
 

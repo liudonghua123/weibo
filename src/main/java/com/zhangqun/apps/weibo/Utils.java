@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -115,6 +116,11 @@ public class Utils {
 	public static void drawUndirectedGraph(StackPane pane,
 			Map<String, Double> nodeWeightCache,
 			Set<UndirectedPair> followsEdgeSet) {
+		drawUndirectedGraph(pane, nodeWeightCache, followsEdgeSet, new ArrayList<String>());
+	}
+
+	public static void drawUndirectedGraph(StackPane pane, Map<String, Double> nodeWeightCache,
+			Set<UndirectedPair> followsEdgeSet, List<String> keyNodes) {
 		Graph graph = new MultiGraph("id");
 
 		System.setProperty("org.graphstream.ui.renderer",
@@ -146,6 +152,9 @@ public class Utils {
 					"ui.label",
 					String.format("%s: %.2f", node.getId(),
 							nodeWeightCache.get(node.getId())));
+			if(keyNodes.contains(node.getId())) {
+				node.addAttribute("ui.class", "key_user_state");
+			}
 		}
 		Collection<Edge> edgeSet = graph.getEdgeSet();
 		for (Edge edge : edgeSet) {
@@ -161,6 +170,7 @@ public class Utils {
 		swingNode.setContent((JComponent) view);
 		pane.getChildren().remove(0, pane.getChildren().size());
 		pane.getChildren().add(swingNode);
+		
 	}
 
 	private static String readClassPathFile(String fileClassPath)

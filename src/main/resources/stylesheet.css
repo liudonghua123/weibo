@@ -19,12 +19,8 @@ node {
 	text-color: #222;
 }
 
-node.d_state {
+node.key_user_state {
 	fill-color: purple;
-}
-
-node.c_state {
-	fill-color: blue;
 }
 
 edge {
